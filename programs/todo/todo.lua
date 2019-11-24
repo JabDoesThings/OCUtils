@@ -9,13 +9,10 @@
 ---
 MAX_ENTRIES = 1000
 
---- The directory that the program is stored.
-local dir = "/programs/whiteboard/"
-
 -- The file to read from.
 local txt = "todo.txt"
 
-local banner3 = assert(loadfile "../utils/banner3.lua")()
+assert(loadfile "../utils/banner3.lua")()
 local util = assert(loadfile "../utils/util.lua")()
 local io = require("io")
 local fs = require("filesystem")
@@ -27,15 +24,14 @@ local gpu = component.gpu
 local term = require("term")
 local event = require("event")
 
--- The directory that the program is stored.
-local dir = "/programs/whiteboard/"
-
 -- The file to read from.
 local txt = "todo.txt"
 
 -- Check to make sure that the file selected exists.
-if not fs.exists(dir..txt) then
-  exit("File does not exist: " .. txt)
+if not fs.exists(txt) then
+  local file = io.open(txt, "w")
+  file:write("1:Example\n")
+  file:close()
 end
 
 local page = 0
@@ -43,7 +39,7 @@ local entries = {}
 local selected_entry = 0
 
 function read_entries()
-  for line in io.lines(dir..txt) do
+  for line in io.lines(txt) do
     local index = nil
     local text = nil
     t = {}
@@ -70,7 +66,7 @@ function write_entries()
     data = data..tostring(k)..":"..v.."\n"
     ::continue::
   end
-  local file = io.open(dir..txt, "w")
+  local file = io.open(txt, "w")
   file:write(data)
   file:close()
 end
@@ -78,7 +74,7 @@ end
 function draw()
   set_resolution()
   clear_console()
-  local todo_text = banner3_format("todo")
+  local todo_text = banner3.format("todo")
   local bar = "\u{2588}"
   term.setCursor(1, 4)
   gpu.setForeground(0x444444)
