@@ -31,7 +31,7 @@ local event = require("event")
 local dir = "/programs/whiteboard/"
 
 -- The file to read from.
-local txt = "whiteboard.txt"
+local txt = "todo.txt"
 
 -- Check to make sure that the file selected exists.
 if not fs.exists(dir..txt) then
