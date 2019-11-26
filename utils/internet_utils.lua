@@ -1,5 +1,4 @@
 local component = require("component")
-local internet = require("internet2")
 local fs = require("filesystem")
 local io = require("io")
 

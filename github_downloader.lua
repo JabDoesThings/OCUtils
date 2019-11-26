@@ -1,22 +1,16 @@
 package.path = package.path .. ";../?.lua" -- Relative paths for 'require'
 
 local fs = require("filesystem")
-local JSON = require("JSON")
 local term = require("term")
-
 local component = require("component")
 local gpu = component.gpu
 
-require("../utils/internet_utils")
+require("utils/internet_utils")
+local JSON = require("utils/json")
 
-local GITHUB_DIRECTORY = "" -- "/programs/github/"
+local GITHUB_DIRECTORY = ""
 local API_URL = "https://api.github.com/"
 local RAW_URL = "https://raw.githubusercontent.com/"
-
--- Make sure that the Github repository exists...
-if GITHUB_DIRECTORY ~= "" and not fs.isDirectory(GITHUB_DIRECTORY) then
-  fs.makeDirectory(GITHUB_DIRECTORY)
-end
 
 local print = function(msg)
   gpu.setForeground(0x00FF00)
@@ -107,6 +101,12 @@ function request_clone_repository()
   local author = string.gsub(term.read(),"\n", "")
   print("Enter the GitHub repository: ")
   local repository = string.gsub(term.read(), "\n", "")
+  print("Enter the directory to clone to: ")
+  GITHUB_DIRECTORY = string.gsub(term.read(), "\n", "")
+  -- Make sure that the Github repository exists...
+  if GITHUB_DIRECTORY ~= "" and not fs.isDirectory(GITHUB_DIRECTORY) then
+    fs.makeDirectory(GITHUB_DIRECTORY)
+  end
   print("Attempting to clone the GitHub repository "..author.."/"..repository.."..")
   clone_repository(author, repository)
 end
