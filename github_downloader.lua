@@ -101,10 +101,13 @@ function request_clone_repository()
   local author = string.gsub(term.read(),"\n", "")
   print("Enter the GitHub repository: ")
   local repository = string.gsub(term.read(), "\n", "")
-  print("Enter the directory to clone to: ")
+  print("Enter the directory to clone to: (Leave blank for '/home')")
   GITHUB_DIRECTORY = string.gsub(term.read(), "\n", "")
   -- Make sure that the Github repository exists...
-  if GITHUB_DIRECTORY ~= "" and not fs.isDirectory(GITHUB_DIRECTORY) then
+  
+  if GITHUB_DIRECTORY == "" then
+    GITHUB_DIRECTORY = '/home'
+  elseif GITHUB_DIRECTORY ~= "" and not fs.isDirectory(GITHUB_DIRECTORY) then
     fs.makeDirectory(GITHUB_DIRECTORY)
   end
   print("Attempting to clone the GitHub repository "..author.."/"..repository.."..")
