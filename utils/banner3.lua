@@ -32,7 +32,7 @@
 local component = require("component")
 local gpu = component.gpu
 
-_G.banner3 = {}
+local banner3 = {}
 banner3.chars = {}
 
 --- Formats text to Banner3 format.
@@ -247,3 +247,5 @@ banner3.chars["y"] = {"##    ##"," ##  ## ","  ####  ","   ##   ","   ##   ","  
 banner3.chars["z"] = {"########","     ## ","    ##  ","   ##   ","  ##    "," ##     ","########"}
 banner3.chars["_"] = {"       ","       ","       ","       ","       ","       ","#######"}
 banner3.chars[" "] = {"   ","   ","   ","   ","   ","   ","   "}
+
+return banner3

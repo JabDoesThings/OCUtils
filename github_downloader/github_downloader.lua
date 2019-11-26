@@ -1,4 +1,5 @@
-require("internet_utils")
+package.path = package.path .. ";../?.lua" -- Relative paths for 'require'
+
 local fs = require("filesystem")
 local JSON = require("JSON")
 local term = require("term")
@@ -6,12 +7,14 @@ local term = require("term")
 local component = require("component")
 local gpu = component.gpu
 
-local GITHUB_DIRECTORY = "/programs/github/"
+require("../utils/internet_utils")
+
+local GITHUB_DIRECTORY = "" -- "/programs/github/"
 local API_URL = "https://api.github.com/"
 local RAW_URL = "https://raw.githubusercontent.com/"
 
 -- Make sure that the Github repository exists...
-if not fs.isDirectory(GITHUB_DIRECTORY) then
+if GITHUB_DIRECTORY ~= "" and not fs.isDirectory(GITHUB_DIRECTORY) then
   fs.makeDirectory(GITHUB_DIRECTORY)
 end
 
@@ -29,7 +32,7 @@ end
 
 function mkdir_repository(author, repository, path)
   if path == nil then path = "" end
-  local path = GITHUB_DIRECTORY..author.."/"..repository.."/"..path
+  local path = GITHUB_DIRECTORY.."/"..repository.."/"..path
   if not fs.isDirectory(path) then 
     fs.makeDirectory(path)
   end
@@ -50,7 +53,7 @@ function clone_repository(author, repository)
     local name = entry.name
     local file_url = raw_url..path.."/"..name
     local data = download(file_url)
-    local file_path = GITHUB_DIRECTORY..author.."/"..repository.."/"..path..name
+    local file_path = GITHUB_DIRECTORY.."/"..repository.."/"..path..name
     local file = io.open(file_path, "w")
     if file == nil then
       print_error("Cannot write to file: \""..file_path.."\". Failed to open File.")
@@ -65,7 +68,7 @@ function clone_repository(author, repository)
     if path == nil then path = "" end
     if entry ~= nil then path = path..entry.name.."/" end
     if path == nil then path = "" end
-    local dir_path = GITHUB_DIRECTORY..author.."/"..repository.."/"..path
+    local dir_path = GITHUB_DIRECTORY.."/"..repository.."/"..path
     print("Making directory: "..dir_path.."..")
     local result = fs.makeDirectory(dir_path)
 
@@ -80,9 +83,7 @@ function clone_repository(author, repository)
     local to_lua = JSON:decode(response)    
     if to_lua == nil then return end
     -- Go through each entry.
-    for i in pairs(to_lua) do
-      recurse(path, to_lua[i])
-    end 
+    for i in pairs(to_lua) do recurse(path, to_lua[i]) end 
   end
 
   recurse = function(path, entry)
@@ -109,3 +110,5 @@ function request_clone_repository()
   print("Attempting to clone the GitHub repository "..author.."/"..repository.."..")
   clone_repository(author, repository)
 end
+
+request_clone_repository()
